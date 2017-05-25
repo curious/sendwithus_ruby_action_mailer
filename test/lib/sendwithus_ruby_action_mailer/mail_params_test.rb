@@ -54,6 +54,39 @@ describe SendWithUsMailer::MailParams do
     end
   end
 
+  describe "mail_params" do
+    before do
+      subject.merge!(email_id: "email",
+                     recipient_name: "name",
+                     recipient_address: "address",
+                     version_name: "version")
+    end
+    it "method exists" do
+      subject.respond_to?(:mail_params).must_equal true
+    end
+
+    it "returns an array with 3 entries" do
+      params = subject.mail_params
+      params.must_be_instance_of Array
+      params.length.must_equal 3
+    end
+
+    it "has email_id as its first entry" do
+      subject.mail_params[0].must_equal "email"
+    end
+
+    it "has to as its second entry" do
+      subject.mail_params[1].must_equal({ name: "name", address: "address"})
+    end
+
+    it "has a hash of data as its third entry" do
+      hash = subject.mail_params[2]
+      hash.must_be_instance_of Hash
+      subject.mail_params[2][:version_name].must_equal "version"
+    end
+  end
+
+
   describe "#deliver" do
     it "method exists" do
       subject.respond_to?(:deliver).must_equal true

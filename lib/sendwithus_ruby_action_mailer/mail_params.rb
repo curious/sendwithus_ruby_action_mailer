@@ -57,6 +57,22 @@ module SendWithUsMailer
       end
     end
 
+    # The array of params that will be used in a send_email call
+    def mail_params
+      [@email_id,
+       @to,
+       data: @email_data,
+       from: @from,
+       cc: @cc,
+       bcc: @bcc,
+       esp_account: @esp_account,
+       version_name: @version_name,
+       locale: @locale,
+       files: @files,
+       headers: @headers,
+       tags: @tags]
+    end
+
     # Invoke <tt>SendWithUs::Api</tt> to deliver the message.
     # The <tt>SendWithUs</tt> module is implemented in the +send_with_us+ gem.
     #
@@ -64,20 +80,7 @@ module SendWithUsMailer
     # In particular, the +api_key+ must be set (following the guidelines in the
     # +send_with_us+ documentation).
     def deliver
-      SendWithUs::Api.new.send_email(
-        @email_id,
-        @to,
-        data: @email_data,
-        from: @from,
-        cc: @cc,
-        bcc: @bcc,
-        esp_account: @esp_account,
-        version_name: @version_name,
-        locale: @locale,
-        files: @files,
-        headers: @headers,
-        tags: @tags
-      ) if @email_id.present?
+      SendWithUs::Api.new.send_email(*mail_params) if @email_id.present?
     end
 
     alias_method :deliver_now, :deliver
@@ -89,20 +92,7 @@ module SendWithUsMailer
     # In particular, the +api_key+ must be set (following the guidelines in the
     # +send_with_us+ documentation).
     def deliver_later
-      Jobs::MailJob.perform_later(
-          @email_id,
-          @to,
-          data: @email_data,
-          from: @from,
-          cc: @cc,
-          bcc: @bcc,
-          esp_account: @esp_account,
-          version_name: @version_name,
-          locale: @locale,
-          files: @files,
-          headers: @headers,
-          tags: @tags
-      ) if @email_id.present?
+      Jobs::MailJob.perform_later(*mail_params) if @email_id.present?
     end
   end
 end
