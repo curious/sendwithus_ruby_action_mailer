@@ -35,22 +35,22 @@ describe SendWithUsMailer::MailParams do
 
   describe "#email_id" do
     it "is readable" do
-      subject.respond_to?(:email_id).must_equal true
-      subject.respond_to?(:email_id=).must_equal false
+      subject.must_respond_to(:email_id)
+      subject.wont_respond_to(:email_id=)
     end
   end
 
   describe "#to" do
     it "is readable" do
-      subject.respond_to?(:to).must_equal true
-      subject.respond_to?(:to=).must_equal false
+      subject.must_respond_to(:to)
+      subject.wont_respond_to(:to=)
     end
   end
 
   describe "#from" do
     it "is readable" do
-      subject.respond_to?(:from).must_equal true
-      subject.respond_to?(:from=).must_equal false
+      subject.must_respond_to(:from)
+      subject.wont_respond_to(:from=)
     end
   end
 
@@ -62,7 +62,7 @@ describe SendWithUsMailer::MailParams do
                      version_name: "version")
     end
     it "method exists" do
-      subject.respond_to?(:mail_params).must_equal true
+      subject.must_respond_to(:mail_params)
     end
 
     it "returns an array with 3 entries" do
@@ -89,7 +89,7 @@ describe SendWithUsMailer::MailParams do
 
   describe "#deliver" do
     it "method exists" do
-      subject.respond_to?(:deliver).must_equal true
+      subject.must_respond_to(:deliver)
     end
 
     it "calls the send_with_us gem" do
@@ -106,7 +106,7 @@ describe SendWithUsMailer::MailParams do
 
   describe "#deliver_now" do
     it "method exists" do
-      subject.respond_to?(:deliver_now).must_equal true
+      subject.must_respond_to(:deliver_now)
     end
 
     it "calls the send_with_us gem" do
@@ -123,7 +123,7 @@ describe SendWithUsMailer::MailParams do
 
   describe "#deliver_later" do
     it "method exists" do
-      subject.respond_to?(:deliver_later).must_equal true
+      subject.must_respond_to(:deliver_later)
     end
 
     it "enqueues the job" do
