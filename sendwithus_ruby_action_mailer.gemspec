@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
+  # FIXME: this version needs to be updated so that send_with_us has batch sending
   gem.add_runtime_dependency 'send_with_us', '>= 1.9.0'
   gem.add_runtime_dependency 'actionpack'
   gem.add_runtime_dependency 'activejob'
