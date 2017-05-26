@@ -104,5 +104,21 @@ module SendWithUsMailer
           tags: @tags
       ) if @email_id.present?
     end
+
+    # Invoke <tt>SendWithUs::Api</tt> to render the message, and return the body.
+    # The <tt>SendWithUs</tt> module is implemented in the +send_with_us+ gem.
+    #
+    # IMPORTANT NOTE: <tt>SendWithUs</tt> must be configured prior to calling this method.
+    # In particular, the +api_key+ must be set (following the guidelines in the
+    # +send_with_us+ documentation).
+    def preview
+      response = SendWithUs::Api.new.render(@email_id, @version_name, @email_data)
+      case response
+      when Net::HTTPSuccess
+        response.body
+      else
+        raise RuntimeError, "SendWithUs preview error: #{response.message}"
+      end
+    end
   end
 end

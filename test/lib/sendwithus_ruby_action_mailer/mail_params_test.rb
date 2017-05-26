@@ -106,4 +106,46 @@ describe SendWithUsMailer::MailParams do
       end
     end
   end
+
+  describe "#preview" do
+    it "method exists" do
+      subject.must_respond_to(:preview)
+    end
+
+    describe "when the call is a success" do
+      before do
+        @response = stub('http', body: 'response body', message: 'success')
+        Net::HTTPSuccess.stubs(:===).with(@response).returns(true)
+      end
+
+      it "calls the send_with_us gem" do
+        SendWithUs::Api.any_instance.expects(:render).once.returns(@response)
+        subject.preview
+      end
+
+      it "calls the Api::render with email_id, version_name, and email_data" do
+        subject.assign(:foo, 'bar')
+        subject.merge!(email_id: 'email', version_name: 'version')
+        SendWithUs::Api.any_instance.expects(:render)
+                       .with('email', 'version', {foo: 'bar'})
+                       .returns(@response)
+        subject.preview
+      end
+
+      it "returns the body" do
+        SendWithUs::Api.any_instance.expects(:render).returns(@response)
+        subject.preview.must_equal 'response body'
+      end
+    end
+
+    describe "when the call is a failure" do
+      before do
+        @response = stub('http', message: 'error message')
+        SendWithUs::Api.any_instance.expects(:render).returns(@response)
+      end
+      it "raises an error" do
+        proc { subject.preview }.must_raise(RuntimeError)
+      end
+    end
+  end
 end
